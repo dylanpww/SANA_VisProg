@@ -6,12 +6,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.sana_visprog.view.HomeView
 import com.example.sana_visprog.view.StartingPage
+import com.example.sana_visprog.view.categories.CategoryDetailView
+import com.example.sana_visprog.view.categories.CreateCategoryView
 
 enum class Screen {
     STARTING,
     HOME,
     PLANNER,
-    PROFILE
+    PROFILE,
+    CREATE_CATEGORY,
+    CATEGORY_DETAIL
 }
 
 @Composable
@@ -30,6 +34,21 @@ fun Navigation() {
             HomeView(navController = navController)
         }
 
-    }
+        composable(Screen.CREATE_CATEGORY.name) {
+            CreateCategoryView(navController = navController)
+        }
 
+        composable(
+            route = "${Screen.CATEGORY_DETAIL.name}/{id}/{name}"
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: ""
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+
+            CategoryDetailView(
+                navController = navController,
+                categoryId = id.toInt(),
+                categoryName = name
+            )
+        }
+    }
 }
