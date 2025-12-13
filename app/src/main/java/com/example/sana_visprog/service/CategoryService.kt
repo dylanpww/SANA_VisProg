@@ -1,9 +1,11 @@
 package com.example.sana_visprog.service
 
+import com.example.sana_visprog.model.ApiResponse
+import com.example.sana_visprog.model.Category
+import com.example.sana_visprog.service.dto.CategoryRequest
 import retrofit2.http.*
 
 interface CategoryService {
-    // Category endpoints
     @GET("categories")
     suspend fun getCategories(): ApiResponse<List<Category>>
 
@@ -19,7 +21,3 @@ interface CategoryService {
     @DELETE("categories/{categoryId}")
     suspend fun deleteCategory(@Path("categoryId") categoryId: Int): ApiResponse<String>
 }
-
-data class CategoryRequest(
-    val name: String
-)
