@@ -8,11 +8,11 @@ import com.example.sana_visprog.service.dto.CategoryRequest
 interface CategoryRepositoryInterface {
     suspend fun getCategories(): ApiResponse<List<Category>>
 
-    suspend fun createCategory(request: CategoryRequest): ApiResponse<String>
+    suspend fun createCategory(name: String): ApiResponse<String>
 
     suspend fun updateCategory(
         categoryId: Int,
-        request: CategoryRequest
+        name: String
     ): ApiResponse<String>
 
     suspend fun deleteCategory(categoryId: Int): ApiResponse<String>
@@ -27,7 +27,8 @@ class CategoryRepository(private val categoryService: CategoryService) : Categor
         }
     }
 
-    override suspend fun createCategory(request: CategoryRequest): ApiResponse<String> {
+    override suspend fun createCategory(name: String): ApiResponse<String> {
+        val request = CategoryRequest(name = name)
         return try {
             categoryService.createCategory(request)
         } catch (e: Exception) {
@@ -35,7 +36,8 @@ class CategoryRepository(private val categoryService: CategoryService) : Categor
         }
     }
 
-    override suspend fun updateCategory(categoryId: Int, request: CategoryRequest): ApiResponse<String> {
+    override suspend fun updateCategory(categoryId: Int, name: String): ApiResponse<String> {
+        val request = CategoryRequest(name = name)
         return try {
             categoryService.updateCategory(categoryId, request)
         } catch (e: Exception) {
