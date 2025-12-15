@@ -15,8 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.sana_visprog.model.Category
+import com.example.sana_visprog.model.Province
 import com.example.sana_visprog.routing.Screen
 import com.example.sana_visprog.view.categories.CategorySection
+import com.example.sana_visprog.view.provinces.ProvinceFilterDropdownContent
 import com.example.sana_visprog.viewmodel.HomeViewModel
 
 @Composable
@@ -26,12 +28,19 @@ fun HomeView(
 ) {
     LaunchedEffect(Unit) {
         viewModel.getCategories()
+        viewModel.getProvinces()
     }
 
     HomeContent(
         categories = viewModel.categories.value,
         categoriesLoading = viewModel.categoriesLoading.value,
         categoriesError = viewModel.categoriesError.value,
+
+        provinces = viewModel.provinces.value,
+        provincesLoading = viewModel.provincesLoading.value,
+        provincesError = viewModel.provincesError.value,
+        isProvinceExpanded = viewModel.isProvinceDropdownExpanded.value,
+        selectedProvince = viewModel.selectedProvince.value,
 
         onAddCategory = {
             viewModel.resetCreateState()
@@ -44,6 +53,16 @@ fun HomeView(
             navController.navigate(
                 "${Screen.CATEGORY_DETAIL.name}/${category.id}/${category.name}"
             )
+        },
+
+        onToggleProvince = {
+            viewModel.isProvinceDropdownExpanded.value =
+                !viewModel.isProvinceDropdownExpanded.value
+        },
+
+        onSelectProvince = { province ->
+            viewModel.selectedProvince.value = province
+            viewModel.isProvinceDropdownExpanded.value = false
         }
     )
 }
@@ -54,15 +73,23 @@ fun HomeContent(
     categoriesLoading: Boolean,
     categoriesError: String?,
 
+    provinces: List<Province>,
+    provincesLoading: Boolean,
+    provincesError: String?,
+    isProvinceExpanded: Boolean,
+    selectedProvince: String?,
+
     onAddCategory: () -> Unit,
-    onCategoryClick: (Category) -> Unit
+    onCategoryClick: (Category) -> Unit,
+
+    onToggleProvince: () -> Unit,
+    onSelectProvince: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 50.dp)
     ) {
-
         if (categoriesLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -84,6 +111,32 @@ fun HomeContent(
                 onCategoryClick = onCategoryClick
             )
         }
+
+        if (provincesLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)
+            )
+        }
+
+        provincesError?.let {
+            Text(
+                text = "Provinces Error: $it",
+                color = Color.Red,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+
+        if (!provincesLoading && provincesError == null) {
+            ProvinceFilterDropdownContent(
+                provinces = provinces,
+                isExpanded = isProvinceExpanded,
+                selectedProvince = selectedProvince,
+                onToggle = onToggleProvince,
+                onSelect = onSelectProvince
+            )
+        }
     }
 }
 
@@ -92,13 +145,28 @@ fun HomeContent(
 fun HomeContentPreview() {
     HomeContent(
         categories = listOf(
-            Category(id = 1, name = "Outdoor"),
-            Category(id = 2, name = "Indoor"),
-            Category(id = 3, name = "Gaming")
+            Category(1, "Outdoor"),
+            Category(2, "Indoor"),
+            Category(3, "Gaming")
         ),
         categoriesLoading = false,
         categoriesError = null,
+
+        provinces = listOf(
+            Province(1, "Jawa Timur"),
+            Province(2, "Jawa Tengah"),
+            Province(3, "Jawa Barat"),
+            Province(4, "Jawa Utara"),
+            Province(5, "Jawa Selatan")
+        ),
+        provincesLoading = false,
+        provincesError = null,
+        isProvinceExpanded = true,
+        selectedProvince = "Jawa Timur",
+
         onAddCategory = {},
-        onCategoryClick = {}
+        onCategoryClick = {},
+        onToggleProvince = {},
+        onSelectProvince = {}
     )
 }
