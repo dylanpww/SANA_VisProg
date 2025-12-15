@@ -55,7 +55,7 @@ class HomeViewModel(
 
         viewModelScope.launch {
             try {
-                val category = categoryRepository.createCategory(name)
+                categoryRepository.createCategory(name)
                 createCategorySuccess.value = true
                 getCategories()
             } catch (e: Exception) {
