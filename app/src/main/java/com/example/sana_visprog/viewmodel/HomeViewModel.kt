@@ -9,10 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.sana_visprog.model.Province
+import com.example.sana_visprog.repository.ProvinceRepository
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val provinceRepository: ProvinceRepository
 ) : ViewModel() {
     val categories = mutableStateOf<List<Category>>(emptyList())
     val categoriesLoading = mutableStateOf(false)
@@ -134,6 +137,33 @@ class HomeViewModel(
         deleteCategorySuccess.value = null
     }
 
+    val provinces = mutableStateOf<List<Province>>(emptyList())
+    val provincesLoading = mutableStateOf(false)
+    val provincesError = mutableStateOf<String?>(null)
+
+    val isProvinceDropdownExpanded = mutableStateOf(false)
+    val selectedProvince = mutableStateOf<String?>(null)
+
+    fun getProvinces() {
+        provincesLoading.value = true
+        provincesError.value = null
+
+        viewModelScope.launch {
+            try {
+                val response = provinceRepository.getProvinces()
+                if (response.data != null) {
+                    provinces.value = response.data
+                } else {
+                    provincesError.value = response.error
+                }
+            } catch (e: Exception) {
+                provincesError.value = e.message
+            } finally {
+                provincesLoading.value = false
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -141,7 +171,8 @@ class HomeViewModel(
                         as SANAVisProgApplication)
 
                 HomeViewModel(
-                    categoryRepository = application.container.categoryRepository
+                    categoryRepository = application.container.categoryRepository,
+                    provinceRepository = application.container.provinceRepository
                 )
             }
         }
