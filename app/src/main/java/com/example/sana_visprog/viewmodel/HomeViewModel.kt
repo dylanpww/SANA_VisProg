@@ -23,15 +23,15 @@ class HomeViewModel(
 
     val createCategoryLoading = mutableStateOf(false)
     val createCategoryError = mutableStateOf<String?>(null)
-    val createCategorySuccess = mutableStateOf<String?>(null)
+    val createCategorySuccess = mutableStateOf(false)
 
     val updateCategoryLoading = mutableStateOf(false)
     val updateCategoryError = mutableStateOf<String?>(null)
-    val updateCategorySuccess = mutableStateOf<String?>(null)
+    val updateCategorySuccess = mutableStateOf(false)
 
     val deleteCategoryLoading = mutableStateOf(false)
     val deleteCategoryError = mutableStateOf<String?>(null)
-    val deleteCategorySuccess = mutableStateOf<String?>(null)
+    val deleteCategorySuccess = mutableStateOf(false)
 
     fun getCategories() {
         categoriesLoading.value = true
@@ -39,12 +39,7 @@ class HomeViewModel(
 
         viewModelScope.launch {
             try {
-                val response = categoryRepository.getCategories()
-                if (response.data != null) {
-                    categories.value = response.data
-                } else {
-                    categoriesError.value = response.error
-                }
+                categories.value = categoryRepository.getCategories()
             } catch (e: Exception) {
                 categoriesError.value = e.message
             } finally {
@@ -56,17 +51,13 @@ class HomeViewModel(
     fun createCategory(name: String) {
         createCategoryLoading.value = true
         createCategoryError.value = null
-        createCategorySuccess.value = null
+        createCategorySuccess.value = false
 
         viewModelScope.launch {
             try {
-                val response = categoryRepository.createCategory(name)
-                if (response.data != null) {
-                    createCategorySuccess.value = response.data
-                    getCategories()
-                } else {
-                    createCategoryError.value = response.error
-                }
+                val category = categoryRepository.createCategory(name)
+                createCategorySuccess.value = true
+                getCategories()
             } catch (e: Exception) {
                 createCategoryError.value = e.message
             } finally {
@@ -78,17 +69,13 @@ class HomeViewModel(
     fun updateCategory(categoryId: Int, name: String) {
         updateCategoryLoading.value = true
         updateCategoryError.value = null
-        updateCategorySuccess.value = null
+        updateCategorySuccess.value = false
 
         viewModelScope.launch {
             try {
-                val response = categoryRepository.updateCategory(categoryId, name)
-                if (response.data != null) {
-                    updateCategorySuccess.value = response.data
-                    getCategories()
-                } else {
-                    updateCategoryError.value = response.error
-                }
+                categoryRepository.updateCategory(categoryId, name)
+                updateCategorySuccess.value = true
+                getCategories()
             } catch (e: Exception) {
                 updateCategoryError.value = e.message
             } finally {
@@ -100,17 +87,13 @@ class HomeViewModel(
     fun deleteCategory(categoryId: Int) {
         deleteCategoryLoading.value = true
         deleteCategoryError.value = null
-        deleteCategorySuccess.value = null
+        deleteCategorySuccess.value = false
 
         viewModelScope.launch {
             try {
-                val response = categoryRepository.deleteCategory(categoryId)
-                if (response.data != null) {
-                    deleteCategorySuccess.value = response.data
-                    getCategories()
-                } else {
-                    deleteCategoryError.value = response.error
-                }
+                categoryRepository.deleteCategory(categoryId)
+                deleteCategorySuccess.value = true
+                getCategories()
             } catch (e: Exception) {
                 deleteCategoryError.value = e.message
             } finally {
@@ -122,19 +105,19 @@ class HomeViewModel(
     fun resetCreateState() {
         createCategoryLoading.value = false
         createCategoryError.value = null
-        createCategorySuccess.value = null
+        createCategorySuccess.value = false
     }
 
     fun resetUpdateState() {
         updateCategoryLoading.value = false
         updateCategoryError.value = null
-        updateCategorySuccess.value = null
+        updateCategorySuccess.value = false
     }
 
     fun resetDeleteState() {
         deleteCategoryLoading.value = false
         deleteCategoryError.value = null
-        deleteCategorySuccess.value = null
+        deleteCategorySuccess.value = false
     }
 
     val provinces = mutableStateOf<List<Province>>(emptyList())
@@ -150,12 +133,7 @@ class HomeViewModel(
 
         viewModelScope.launch {
             try {
-                val response = provinceRepository.getProvinces()
-                if (response.data != null) {
-                    provinces.value = response.data
-                } else {
-                    provincesError.value = response.error
-                }
+                provinces.value = provinceRepository.getProvinces()
             } catch (e: Exception) {
                 provincesError.value = e.message
             } finally {
@@ -163,6 +141,7 @@ class HomeViewModel(
             }
         }
     }
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

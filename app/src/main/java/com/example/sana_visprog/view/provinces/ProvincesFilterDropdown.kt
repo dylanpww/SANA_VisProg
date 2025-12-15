@@ -83,19 +83,21 @@ fun ProvinceFilterDropdownContent(
 
 @Composable
 fun ProvinceFilterDropdownView(
-    provinces: List<Province>
+    provinces: List<Province>,
+    isExpanded: Boolean,
+    selectedProvince: String?,
+    onToggle: () -> Unit,
+    onSelect: (Province) -> Unit
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var selectedProvince by remember { mutableStateOf<String?>(null) }
-
     ProvinceFilterDropdownContent(
         provinces = provinces,
         isExpanded = isExpanded,
         selectedProvince = selectedProvince,
-        onToggle = { isExpanded = !isExpanded },
-        onSelect = { province ->
-            selectedProvince = province
-            isExpanded = false
+        onToggle = onToggle,
+        onSelect = { name ->
+            provinces.firstOrNull { it.name == name }?.let {
+                onSelect(it)
+            }
         }
     )
 }

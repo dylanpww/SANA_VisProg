@@ -166,21 +166,21 @@ fun CategoryDetailView(
                 viewModel.deleteCategoryLoading.value
 
     LaunchedEffect(viewModel.updateCategorySuccess.value) {
-        if (viewModel.updateCategorySuccess.value != null) {
+        if (viewModel.updateCategorySuccess.value) {
             navController.popBackStack()
             viewModel.resetUpdateState()
         }
     }
 
     LaunchedEffect(viewModel.deleteCategorySuccess.value) {
-        if (viewModel.deleteCategorySuccess.value != null) {
+        if (viewModel.deleteCategorySuccess.value) {
             navController.popBackStack()
             viewModel.resetDeleteState()
         }
     }
 
     CategoryDetailContent(
-        title = categoryName,
+        title = name,
         name = name,
         loading = loading,
         error = viewModel.updateCategoryError.value
