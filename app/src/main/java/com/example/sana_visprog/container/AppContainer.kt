@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class AppContainer(private val context: Context) {
 //    private val baseUrl = "http://192.168.0.9:3000/api/" //URL Vanness Home Wifi
-    private val baseUrl = "http://192.168.0.9:3000/api/" //URL Vanness Data HP
+    private val baseUrl = "http://10.237.188.231:3000/api/" //URL Vanness Data HP
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
