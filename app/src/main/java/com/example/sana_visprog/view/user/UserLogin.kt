@@ -16,8 +16,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sana_visprog.viewmodel.LoginUiState
+import com.example.sana_visprog.viewmodel.AuthUiState
 import com.example.sana_visprog.viewmodel.LoginViewModel
 
 @Composable
@@ -29,11 +28,11 @@ fun UserLoginView(
 
     LaunchedEffect(loginState) {
         when (val state = loginState) {
-            is LoginUiState.Success -> {
+            is AuthUiState.Success -> {
                 Toast.makeText(context, "BERHASIL! Halo ${state.username}", Toast.LENGTH_LONG).show()
                 viewModel.resetState()
             }
-            is LoginUiState.Error -> {
+            is AuthUiState.Error -> {
                 Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
                 viewModel.resetState()
             }
@@ -96,9 +95,9 @@ fun UserLoginView(
                         containerColor = Color(0xFF0F115F),
                         contentColor = Color.White
                     ),
-                    enabled = loginState !is LoginUiState.Loading
+                    enabled = loginState !is AuthUiState.Loading
                 ) {
-                    if (loginState is LoginUiState.Loading) {
+                    if (loginState is AuthUiState.Loading) {
                         CircularProgressIndicator(
                             color = Color.White,
                             modifier = Modifier.size(20.dp)
