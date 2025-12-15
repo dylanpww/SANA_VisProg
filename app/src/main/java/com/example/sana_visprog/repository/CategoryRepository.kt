@@ -5,21 +5,8 @@ import com.example.sana_visprog.model.Category
 import com.example.sana_visprog.service.CategoryService
 import com.example.sana_visprog.service.dto.CategoryRequest
 
-interface CategoryRepositoryInterface {
-    suspend fun getCategories(): ApiResponse<List<Category>>
-
-    suspend fun createCategory(name: String): ApiResponse<String>
-
-    suspend fun updateCategory(
-        categoryId: Int,
-        name: String
-    ): ApiResponse<String>
-
-    suspend fun deleteCategory(categoryId: Int): ApiResponse<String>
-}
-
-class CategoryRepository(private val categoryService: CategoryService) : CategoryRepositoryInterface {
-    override suspend fun getCategories(): ApiResponse<List<Category>> {
+class CategoryRepository(private val categoryService: CategoryService) {
+    suspend fun getCategories(): ApiResponse<List<Category>> {
         return try {
             categoryService.getCategories()
         } catch (e: Exception) {
@@ -27,7 +14,7 @@ class CategoryRepository(private val categoryService: CategoryService) : Categor
         }
     }
 
-    override suspend fun createCategory(name: String): ApiResponse<String> {
+    suspend fun createCategory(name: String): ApiResponse<String> {
         val request = CategoryRequest(name = name)
         return try {
             categoryService.createCategory(request)
@@ -36,7 +23,7 @@ class CategoryRepository(private val categoryService: CategoryService) : Categor
         }
     }
 
-    override suspend fun updateCategory(categoryId: Int, name: String): ApiResponse<String> {
+    suspend fun updateCategory(categoryId: Int, name: String): ApiResponse<String> {
         val request = CategoryRequest(name = name)
         return try {
             categoryService.updateCategory(categoryId, request)
@@ -45,7 +32,7 @@ class CategoryRepository(private val categoryService: CategoryService) : Categor
         }
     }
 
-    override suspend fun deleteCategory(categoryId: Int): ApiResponse<String> {
+    suspend fun deleteCategory(categoryId: Int): ApiResponse<String> {
         return try {
             categoryService.deleteCategory(categoryId)
         } catch (e: Exception) {
