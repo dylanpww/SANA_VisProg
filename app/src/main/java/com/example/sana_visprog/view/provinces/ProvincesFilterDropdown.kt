@@ -17,10 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,19 +79,21 @@ fun ProvinceFilterDropdownContent(
 
 @Composable
 fun ProvinceFilterDropdownView(
-    provinces: List<Province>
+    provinces: List<Province>,
+    isExpanded: Boolean,
+    selectedProvince: String?,
+    onToggle: () -> Unit,
+    onSelect: (Province) -> Unit
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var selectedProvince by remember { mutableStateOf<String?>(null) }
-
     ProvinceFilterDropdownContent(
         provinces = provinces,
         isExpanded = isExpanded,
         selectedProvince = selectedProvince,
-        onToggle = { isExpanded = !isExpanded },
-        onSelect = { province ->
-            selectedProvince = province
-            isExpanded = false
+        onToggle = onToggle,
+        onSelect = { name ->
+            provinces.firstOrNull { it.name == name }?.let {
+                onSelect(it)
+            }
         }
     )
 }

@@ -140,7 +140,7 @@ fun CreateCategoryView(
     val name = remember { mutableStateOf("") }
 
     LaunchedEffect(viewModel.createCategorySuccess.value) {
-        if (viewModel.createCategorySuccess.value != null) {
+        if (viewModel.createCategorySuccess.value) {
             navController.popBackStack()
             viewModel.resetCreateState()
         }

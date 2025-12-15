@@ -18,7 +18,7 @@ import com.example.sana_visprog.model.Category
 import com.example.sana_visprog.model.Province
 import com.example.sana_visprog.routing.Screen
 import com.example.sana_visprog.view.categories.CategorySection
-import com.example.sana_visprog.view.provinces.ProvinceFilterDropdownContent
+import com.example.sana_visprog.view.provinces.ProvinceFilterDropdownView
 import com.example.sana_visprog.viewmodel.HomeViewModel
 
 @Composable
@@ -129,13 +129,16 @@ fun HomeContent(
         }
 
         if (!provincesLoading && provincesError == null) {
-            ProvinceFilterDropdownContent(
+            ProvinceFilterDropdownView(
                 provinces = provinces,
                 isExpanded = isProvinceExpanded,
                 selectedProvince = selectedProvince,
                 onToggle = onToggleProvince,
-                onSelect = onSelectProvince
+                onSelect = { province ->
+                    onSelectProvince(province.name)
+                }
             )
+
         }
     }
 }

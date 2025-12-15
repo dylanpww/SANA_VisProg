@@ -1,16 +1,25 @@
 package com.example.sana_visprog.repository
 
-import com.example.sana_visprog.model.ApiResponse
 import com.example.sana_visprog.model.Province
 import com.example.sana_visprog.service.ProvinceService
 
 
 class ProvinceRepository(private val provinceService: ProvinceService) {
-    suspend fun getProvinces(): ApiResponse<List<Province>> {
-        return try {
-            provinceService.getProvinces()
-        } catch (e: Exception) {
-            ApiResponse(error = e.message)
+    suspend fun getProvinces(): List<Province> {
+        return provinceService.getProvinces().data.map {
+            Province(
+                id = it.id,
+                name = it.name
+            )
         }
+    }
+
+    suspend fun getProvinceById(provinceId: Int): Province {
+        val data = provinceService.getProvinceById(provinceId).data
+
+        return Province(
+            id = data.id,
+            name = data.name
+        )
     }
 }
