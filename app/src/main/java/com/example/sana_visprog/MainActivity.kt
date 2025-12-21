@@ -5,7 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.sana_visprog.container.AppContainer
+import com.example.sana_visprog.routing.Navigation
 import com.example.sana_visprog.ui.theme.SANA_VisProgTheme
+import com.example.sana_visprog.view.plan.CreatePlanScreen
+import com.example.sana_visprog.view.plan.PlanScreen
 import com.example.sana_visprog.view.user.UserLoginView
 import com.example.sana_visprog.view.user.UserSignUpView
 import com.example.sana_visprog.viewmodel.LoginViewModel
@@ -20,9 +23,11 @@ class MainActivity : ComponentActivity() {
         val registerViewModel = RegisterViewModel(appContainer.authRepository)
         setContent {
             SANA_VisProgTheme {
-//                Navigation()
-                UserLoginView(viewModel = loginViewModel)
+                Navigation()
+//                UserLoginView(viewModel = loginViewModel)
                 //UserSignUpView(viewModel = registerViewModel)
+//                CreatePlanScreen()
+//                PlanScreen()
             }
         }
     }
