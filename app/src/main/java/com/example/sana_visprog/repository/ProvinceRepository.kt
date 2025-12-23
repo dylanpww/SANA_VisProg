@@ -13,13 +13,4 @@ class ProvinceRepository(private val provinceService: ProvinceService) {
             )
         }
     }
-
-    suspend fun getProvinceById(provinceId: Int): Province {
-        val data = provinceService.getProvinceById(provinceId).data
-
-        return Province(
-            id = data.id,
-            name = data.name
-        )
-    }
 }

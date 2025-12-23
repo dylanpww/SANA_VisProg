@@ -9,31 +9,22 @@ class CategoryRepository(private val categoryService: CategoryService) {
         return categoryService.getCategories().data.map {
             Category(
                 id = it.id,
-                name = it.name
+                name = it.name,
+                icon = it.icon
             )
         }
     }
 
-    suspend fun getCategoriesById(categoryId: Int): Category {
-        val response = categoryService.getCategoriesById(categoryId)
-        val data = response.data
-
-        return Category(
-            id = data.id,
-            name = data.name
-        )
-    }
-
-    suspend fun createCategory(name: String) {
+    suspend fun createCategory(name: String, icon: String) {
         categoryService.createCategory(
-            CategoriesRequest(name)
+            CategoriesRequest(name, icon)
         )
     }
 
-    suspend fun updateCategory(categoryId: Int, name: String) {
+    suspend fun updateCategory(categoryId: Int, name: String, icon: String) {
         categoryService.updateCategory(
             categoryId,
-            CategoriesRequest(name)
+            CategoriesRequest(name, icon)
         )
     }
 

@@ -48,14 +48,14 @@ class HomeViewModel(
         }
     }
 
-    fun createCategory(name: String) {
+    fun createCategory(name: String, icon: String) {
         createCategoryLoading.value = true
         createCategoryError.value = null
         createCategorySuccess.value = false
 
         viewModelScope.launch {
             try {
-                categoryRepository.createCategory(name)
+                categoryRepository.createCategory(name, icon)
                 createCategorySuccess.value = true
                 getCategories()
             } catch (e: Exception) {
@@ -66,14 +66,14 @@ class HomeViewModel(
         }
     }
 
-    fun updateCategory(categoryId: Int, name: String) {
+    fun updateCategory(categoryId: Int, name: String, icon: String) {
         updateCategoryLoading.value = true
         updateCategoryError.value = null
         updateCategorySuccess.value = false
 
         viewModelScope.launch {
             try {
-                categoryRepository.updateCategory(categoryId, name)
+                categoryRepository.updateCategory(categoryId, name, icon)
                 updateCategorySuccess.value = true
                 getCategories()
             } catch (e: Exception) {
