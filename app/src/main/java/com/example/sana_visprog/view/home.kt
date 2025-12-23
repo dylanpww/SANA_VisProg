@@ -51,7 +51,7 @@ fun HomeView(
             viewModel.resetUpdateState()
             viewModel.resetDeleteState()
             navController.navigate(
-                "${Screen.CATEGORY_DETAIL.name}/${category.id}/${category.name}"
+                "${Screen.CATEGORY_DETAIL.name}/${category.id}"
             )
         },
 
@@ -148,9 +148,9 @@ fun HomeContent(
 fun HomeContentPreview() {
     HomeContent(
         categories = listOf(
-            Category(1, "Outdoor"),
-            Category(2, "Indoor"),
-            Category(3, "Gaming")
+            Category(1, "Outdoor", "Park"),
+            Category(2, "Indoor", "Museum"),
+            Category(3, "Gaming", "Gaming")
         ),
         categoriesLoading = false,
         categoriesError = null,

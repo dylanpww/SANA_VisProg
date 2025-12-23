@@ -47,15 +47,13 @@ fun Navigation() {
         }
 
         composable(
-            route = "${Screen.CATEGORY_DETAIL.name}/{id}/{name}"
+            route = "${Screen.CATEGORY_DETAIL.name}/{id}"
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: ""
-            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
 
             CategoryDetailView(
                 navController = navController,
-                categoryId = id.toInt(),
-                categoryName = name
+                categoryId = id
             )
         }
 

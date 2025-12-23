@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sana_visprog.model.Category
+import com.example.sana_visprog.utils.IconList
 
 @Composable
 fun CategorySection(
@@ -62,8 +63,16 @@ fun CategorySection(
                             .size(70.dp)
                             .clip(CircleShape)
                             .background(Color(0xFF131677))
-                            .clickable { onCategoryClick(category) }
-                    )
+                            .clickable { onCategoryClick(category) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = IconList.getIconByName(category.icon),
+                            contentDescription = category.name,
+                            tint = Color.White,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(5.dp))
 
@@ -116,9 +125,9 @@ fun CategorySection(
 @Composable
 fun PreviewCategorySection() {
     val dummyCategories = listOf(
-        Category(1, "Gaming"),
-        Category(2, "Outdoor"),
-        Category(3, "Indoor")
+        Category(1, "Gaming", "Gaming"),
+        Category(2, "Outdoor", "Hiking"),
+        Category(3, "Beach", "Beach")
     )
     CategorySection(
         categories = dummyCategories,

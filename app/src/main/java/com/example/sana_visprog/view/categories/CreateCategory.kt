@@ -1,8 +1,12 @@
 package com.example.sana_visprog.view.categories
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,14 +20,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.sana_visprog.utils.IconList
 import com.example.sana_visprog.viewmodel.HomeViewModel
 
 @Composable
 fun CreateCategoryContent(
     name: String,
+    selectedIcon: String,
     loading: Boolean,
     error: String?,
     onNameChange: (String) -> Unit,
+    onIconSelect: (String) -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit
 ) {
@@ -65,6 +72,45 @@ fun CreateCategoryContent(
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Icon",
+                modifier = Modifier.align(Alignment.Start),
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF0D2C8A)
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(IconList.icons) { iconOption ->
+                    Box(
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                            .background(
+                                if (selectedIcon == iconOption.name)
+                                    Color(0xFF0D2C8A)
+                                else
+                                    Color(0xFFBFC7E6)
+                            )
+                            .clickable { onIconSelect(iconOption.name) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = iconOption.icon,
+                            contentDescription = iconOption.name,
+                            tint = Color.White,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                }
+            }
 
             error?.let {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -138,6 +184,7 @@ fun CreateCategoryView(
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
 ) {
     val name = remember { mutableStateOf("") }
+    val selectedIcon = remember { mutableStateOf("") }
 
     LaunchedEffect(viewModel.createCategorySuccess.value) {
         if (viewModel.createCategorySuccess.value) {
@@ -148,11 +195,13 @@ fun CreateCategoryView(
 
     CreateCategoryContent(
         name = name.value,
+        selectedIcon = selectedIcon.value,
         loading = viewModel.createCategoryLoading.value,
         error = viewModel.createCategoryError.value,
         onNameChange = { name.value = it },
+        onIconSelect = { selectedIcon.value = it },
         onSave = {
-            viewModel.createCategory(name.value)
+            viewModel.createCategory(name.value, selectedIcon.value)
         },
         onCancel = {
             viewModel.resetCreateState()
@@ -166,9 +215,11 @@ fun CreateCategoryView(
 fun PreviewCreateCategoryView() {
     CreateCategoryContent(
         name = "Football Match",
+        selectedIcon = "Sports",
         loading = false,
         error = null,
         onNameChange = {},
+        onIconSelect = {},
         onSave = {},
         onCancel = {}
     )
