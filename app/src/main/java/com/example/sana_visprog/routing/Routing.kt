@@ -32,7 +32,7 @@ fun Navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.PLAN.name
+        startDestination = Screen.HOME.name
     ) {
         composable(Screen.STARTING.name) {
             StartingPage(navController = navController)

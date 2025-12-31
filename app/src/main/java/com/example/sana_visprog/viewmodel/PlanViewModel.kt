@@ -45,7 +45,7 @@ class PlanViewModel(private val planRepository: PlanRepository) : ViewModel() {
     var updatePlanState: UpdatePlanState by mutableStateOf(UpdatePlanState.Idle)
         private set
 
-    private val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkeWxhbiIsImVtYWlsIjoiZHlsYW5AZ21haWwuY29tIiwiaWF0IjoxNzY2MzE0NTY3LCJleHAiOjE3NjYzMTgxNjd9.BER5S5EBOz5Z54LAdr81HDJIUrd2jxZs3j0mqRHK_PQ"
+    private val token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzY3MDA4NzY4LCJleHAiOjE3NjcwMTIzNjh9.CZMZVq2pUTS5NccUvVRv1taOHNAemPhRjR_SdGGXwAU"
 
     fun getPlans() {
         viewModelScope.launch {

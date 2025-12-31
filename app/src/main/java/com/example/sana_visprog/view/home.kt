@@ -1,8 +1,13 @@
 package com.example.sana_visprog.view
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -85,60 +90,74 @@ fun HomeContent(
     onToggleProvince: () -> Unit,
     onSelectProvince: (String) -> Unit,
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 50.dp)
-    ) {
-        if (categoriesLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        }
+    ){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .background(
+                    color = Color(0xFF0F115F),
+                    shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
+                )
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 50.dp)
+        ) {
+            if (categoriesLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
 
-        categoriesError?.let {
-            Text(
-                text = "Categories Error: $it",
-                color = Color.Red,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
+            categoriesError?.let {
+                Text(
+                    text = "Categories Error: $it",
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
 
-        if (!categoriesLoading && categoriesError == null) {
-            CategorySection(
-                categories = categories,
-                onAddClick = onAddCategory,
-                onCategoryClick = onCategoryClick
-            )
-        }
+            if (!categoriesLoading && categoriesError == null) {
+                CategorySection(
+                    categories = categories,
+                    onAddClick = onAddCategory,
+                    onCategoryClick = onCategoryClick
+                )
+            }
 
-        if (provincesLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 16.dp)
-            )
-        }
+            if (provincesLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 16.dp)
+                )
+            }
 
-        provincesError?.let {
-            Text(
-                text = "Provinces Error: $it",
-                color = Color.Red,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
+            provincesError?.let {
+                Text(
+                    text = "Provinces Error: $it",
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
 
-        if (!provincesLoading && provincesError == null) {
-            ProvinceFilterDropdownView(
-                provinces = provinces,
-                isExpanded = isProvinceExpanded,
-                selectedProvince = selectedProvince,
-                onToggle = onToggleProvince,
-                onSelect = { province ->
-                    onSelectProvince(province.name)
-                }
-            )
+            if (!provincesLoading && provincesError == null) {
+                ProvinceFilterDropdownView(
+                    provinces = provinces,
+                    isExpanded = isProvinceExpanded,
+                    selectedProvince = selectedProvince,
+                    onToggle = onToggleProvince,
+                    onSelect = { province ->
+                        onSelectProvince(province.name)
+                    }
+                )
 
+            }
         }
     }
 }
