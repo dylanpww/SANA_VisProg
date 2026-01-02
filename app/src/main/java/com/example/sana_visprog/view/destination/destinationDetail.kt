@@ -33,7 +33,7 @@ val dummyDestinations = listOf(
         name = "Mount Bromo",
         description = "Gunung Bromo adalah gunung berapi somma aktif dan bagian dari pegunungan Tengger, di Jawa Timur, Indonesia. Dengan ketinggian 2.329 meter, gunung ini bukanlah puncak tertinggi dari pegunungan tersebut, namun merupakan yang paling terkenal.",
         location = "Probolinggo, Jawa Timur",
-        rating = 4.8f,
+        rating = 4.0f,
         pictureUrl = "https://images.unsplash.com/photo-1588668214407-6ea4e6d8c55e?q=80&w=1000&auto=format&fit=crop",
         pictureUrl2 = "",
         categoryId = 1,

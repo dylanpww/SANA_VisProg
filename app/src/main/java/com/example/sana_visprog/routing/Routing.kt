@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.sana_visprog.view.HomeView
 import com.example.sana_visprog.view.StartingPage
+import com.example.sana_visprog.view.destination.DestinationDetailView
 import com.example.sana_visprog.view.categories.CategoryDetailView
 import com.example.sana_visprog.view.categories.CreateCategoryView
 import com.example.sana_visprog.view.plan.CreatePlanScreen
@@ -23,7 +24,9 @@ enum class Screen {
     CATEGORY_DETAIL,
     CREATE_PLAN,
     PLAN,
-    PLAN_DETAIL
+    PLAN_DETAIL,
+    DESTINATION_DETAIL,
+    ADD_DESTINATION
 }
 
 @Composable
@@ -50,7 +53,6 @@ fun Navigation() {
             route = "${Screen.CATEGORY_DETAIL.name}/{id}"
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
-
             CategoryDetailView(
                 navController = navController,
                 categoryId = id
@@ -84,5 +86,21 @@ fun Navigation() {
                 oldDescription = desc
             )
         }
+
+        composable(
+            route = "${Screen.DESTINATION_DETAIL.name}/{destinationId}",
+            arguments = listOf(
+                navArgument("destinationId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getInt("destinationId") ?: 0
+
+            DestinationDetailView(
+                navController = navController,
+                destinationId = id
+            )
+        }
+//        composable(Screen.ADD_DESTINATION.name) {
+//            AddDestinationView(navController = navController)
+        }
     }
-}

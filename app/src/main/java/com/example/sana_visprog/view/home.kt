@@ -1,13 +1,10 @@
 package com.example.sana_visprog.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,14 +12,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.sana_visprog.model.Category
+import com.example.sana_visprog.model.Destination
 import com.example.sana_visprog.model.Province
 import com.example.sana_visprog.routing.Screen
 import com.example.sana_visprog.view.categories.CategorySection
+import com.example.sana_visprog.view.destination.DestinationCard
+import com.example.sana_visprog.view.destination.dummyDestinations // Import Data Dummy
 import com.example.sana_visprog.view.provinces.ProvinceFilterDropdownView
 import com.example.sana_visprog.viewmodel.HomeViewModel
 
@@ -68,6 +71,10 @@ fun HomeView(
         onSelectProvince = { province ->
             viewModel.selectedProvince.value = province
             viewModel.isProvinceDropdownExpanded.value = false
+        },
+
+        onDestinationClick = { destination ->
+            navController.navigate("${Screen.DESTINATION_DETAIL.name}/${destination.id}")
         }
     )
 }
@@ -89,10 +96,13 @@ fun HomeContent(
 
     onToggleProvince: () -> Unit,
     onSelectProvince: (String) -> Unit,
+
+    onDestinationClick: (Destination) -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ){
         Box(
             modifier = Modifier
@@ -103,11 +113,15 @@ fun HomeContent(
                     shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
                 )
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 50.dp)
+                .verticalScroll(scrollState)
+                .padding(bottom = 20.dp)
         ) {
+
             if (categoriesLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -156,7 +170,42 @@ fun HomeContent(
                         onSelectProvince(province.name)
                     }
                 )
+            }
 
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Popular Destinations",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            val chunkedDestinations = dummyDestinations.chunked(2)
+
+            chunkedDestinations.forEach { rowItems ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    rowItems.forEach { destination ->
+                        Box(modifier = Modifier.weight(1f)) {
+                            DestinationCard(
+                                destination = destination,
+                                onClick = { onDestinationClick(destination) }
+                            )
+                        }
+                    }
+
+                    if (rowItems.size < 2) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
@@ -177,18 +226,17 @@ fun HomeContentPreview() {
         provinces = listOf(
             Province(1, "Jawa Timur"),
             Province(2, "Jawa Tengah"),
-            Province(3, "Jawa Barat"),
-            Province(4, "Jawa Utara"),
-            Province(5, "Jawa Selatan")
+            Province(3, "Jawa Barat")
         ),
         provincesLoading = false,
         provincesError = null,
-        isProvinceExpanded = true,
+        isProvinceExpanded = false,
         selectedProvince = "Jawa Timur",
 
         onAddCategory = {},
         onCategoryClick = {},
         onToggleProvince = {},
-        onSelectProvince = {}
+        onSelectProvince = {},
+        onDestinationClick = {}
     )
 }
