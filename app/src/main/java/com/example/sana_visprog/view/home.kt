@@ -3,9 +3,14 @@ package com.example.sana_visprog.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +58,9 @@ fun HomeView(
             viewModel.resetCreateState()
             navController.navigate(Screen.CREATE_CATEGORY.name)
         },
+        onAddDestination = {
+            navController.navigate(Screen.ADD_DESTINATION.name)
+        },
 
         onCategoryClick = { category ->
             viewModel.resetUpdateState()
@@ -93,6 +101,7 @@ fun HomeContent(
     destinations: List<Destination>,
 
     onAddCategory: () -> Unit,
+    onAddDestination: () -> Unit,
     onCategoryClick: (Category) -> Unit,
 
     onToggleProvince: () -> Unit,
@@ -120,7 +129,7 @@ fun HomeContent(
                 .fillMaxSize()
                 .padding(top = 50.dp)
                 .verticalScroll(scrollState)
-                .padding(bottom = 20.dp)
+                .padding(bottom = 80.dp)
         ) {
 
             if (categoriesLoading) {
@@ -186,7 +195,6 @@ fun HomeContent(
 
             val chunkedDestinations = destinations.chunked(2)
 
-            // Optional: Pesan jika data kosong
             if (destinations.isEmpty()) {
                 Text(
                     text = "Belum ada destinasi.",
@@ -217,6 +225,21 @@ fun HomeContent(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
+        }
+
+        FloatingActionButton(
+            onClick = onAddDestination,
+            containerColor = Color(0xFF0F115F),
+            contentColor = Color.White,
+            shape = CircleShape,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "Add Destination"
+            )
         }
     }
 }
@@ -250,6 +273,7 @@ fun HomeContentPreview() {
         ),
 
         onAddCategory = {},
+        onAddDestination = {},
         onCategoryClick = {},
         onToggleProvince = {},
         onSelectProvince = {},

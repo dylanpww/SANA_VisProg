@@ -11,6 +11,7 @@ import com.example.sana_visprog.view.StartingPage
 import com.example.sana_visprog.view.destination.DestinationDetailView
 import com.example.sana_visprog.view.categories.CategoryDetailView
 import com.example.sana_visprog.view.categories.CreateCategoryView
+import com.example.sana_visprog.view.destination.CreateDestinationView
 import com.example.sana_visprog.view.plan.CreatePlanScreen
 import com.example.sana_visprog.view.plan.PlanScreen
 import com.example.sana_visprog.view.plan.UpdatePlanScreen
@@ -59,11 +60,11 @@ fun Navigation() {
             )
         }
 
-        composable(Screen.PLAN.name){
+        composable(Screen.PLAN.name) {
             PlanScreen(navController = navController)
         }
 
-        composable(Screen.CREATE_PLAN.name){
+        composable(Screen.CREATE_PLAN.name) {
             CreatePlanScreen(navController = navController)
         }
 
@@ -100,7 +101,8 @@ fun Navigation() {
                 destinationId = id
             )
         }
-//        composable(Screen.ADD_DESTINATION.name) {
-//            AddDestinationView(navController = navController)
+        composable(Screen.ADD_DESTINATION.name) {
+            CreateDestinationView(navController = navController)
         }
     }
+}
