@@ -2,7 +2,10 @@ package com.example.sana_visprog.view.destination
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -49,8 +52,15 @@ fun DestinationDetailView(
                 modifier = Modifier.align(Alignment.Center),
                 color = Color.White
             )
-        }
-        else if (destination != null) {
+        } else if (destination != null) {
+
+            val images = listOfNotNull(
+                destination.pictureUrl,
+                destination.pictureUrl2.takeIf { !it.isNullOrEmpty() }
+            )
+
+            val pagerState = rememberPagerState(pageCount = { images.size })
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -99,18 +109,49 @@ fun DestinationDetailView(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                AsyncImage(
-                    model = destination.pictureUrl,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .background(Color.Gray)
-                )
+                ) {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize()
+                    ) { page ->
+                        AsyncImage(
+                            model = images[page],
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Gray)
+                        )
+                    }
+
+                    if (images.size > 1) {
+                        Row(
+                            Modifier
+                                .height(50.dp)
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            repeat(images.size) { iteration ->
+                                val color = if (pagerState.currentPage == iteration) Color.White else Color.White.copy(alpha = 0.5f)
+                                Box(
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                        .size(8.dp)
+                                )
+                            }
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -134,6 +175,13 @@ fun DestinationDetailView(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                Text(
+                    text = "Description",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = destination.description,
                     color = Color.White.copy(alpha = 0.9f),
@@ -173,16 +221,9 @@ fun DestinationDetailView(
                     )
                 }
             }
-        }
-        else {
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+        } else {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("Data tidak ditemukan", color = Color.White)
-                Button(onClick = { navController.popBackStack() }) {
-                    Text("Kembali")
-                }
             }
         }
     }
