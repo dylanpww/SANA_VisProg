@@ -1,22 +1,26 @@
 package com.example.sana_visprog.viewmodel
 
-import com.example.sana_visprog.SANAVisProgApplication
-import com.example.sana_visprog.model.Category
-import com.example.sana_visprog.repository.CategoryRepository
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.sana_visprog.SANAVisProgApplication
+import com.example.sana_visprog.model.Category
+import com.example.sana_visprog.model.Destination
 import com.example.sana_visprog.model.Province
+import com.example.sana_visprog.repository.CategoryRepository
 import com.example.sana_visprog.repository.ProvinceRepository
+import com.example.sana_visprog.repository.DestinationRepository
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val categoryRepository: CategoryRepository,
-    private val provinceRepository: ProvinceRepository
+    private val provinceRepository: ProvinceRepository,
+    private val destinationRepository: DestinationRepository
 ) : ViewModel() {
+
     val categories = mutableStateOf<List<Category>>(emptyList())
     val categoriesLoading = mutableStateOf(false)
     val categoriesError = mutableStateOf<String?>(null)
@@ -33,6 +37,21 @@ class HomeViewModel(
     val deleteCategoryError = mutableStateOf<String?>(null)
     val deleteCategorySuccess = mutableStateOf(false)
 
+    // --- PROVINCE STATE ---
+    val provinces = mutableStateOf<List<Province>>(emptyList())
+    val provincesLoading = mutableStateOf(false)
+    val provincesError = mutableStateOf<String?>(null)
+
+    val isProvinceDropdownExpanded = mutableStateOf(false)
+    val selectedProvince = mutableStateOf<String?>(null)
+
+    // --- DESTINATION STATE (BARU) ---
+    val destinations = mutableStateOf<List<Destination>>(emptyList())
+    val destinationsLoading = mutableStateOf(false)
+    val destinationsError = mutableStateOf<String?>(null)
+
+
+    // --- CATEGORY FUNCTIONS ---
     fun getCategories() {
         categoriesLoading.value = true
         categoriesError.value = null
@@ -120,13 +139,6 @@ class HomeViewModel(
         deleteCategorySuccess.value = false
     }
 
-    val provinces = mutableStateOf<List<Province>>(emptyList())
-    val provincesLoading = mutableStateOf(false)
-    val provincesError = mutableStateOf<String?>(null)
-
-    val isProvinceDropdownExpanded = mutableStateOf(false)
-    val selectedProvince = mutableStateOf<String?>(null)
-
     fun getProvinces() {
         provincesLoading.value = true
         provincesError.value = null
@@ -142,6 +154,20 @@ class HomeViewModel(
         }
     }
 
+    fun getDestinations() {
+        destinationsLoading.value = true
+        destinationsError.value = null
+
+        viewModelScope.launch {
+            try {
+                destinations.value = destinationRepository.getDestinations()
+            } catch (e: Exception) {
+                destinationsError.value = e.message
+            } finally {
+                destinationsLoading.value = false
+            }
+        }
+    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
@@ -151,7 +177,8 @@ class HomeViewModel(
 
                 HomeViewModel(
                     categoryRepository = application.container.categoryRepository,
-                    provinceRepository = application.container.provinceRepository
+                    provinceRepository = application.container.provinceRepository,
+                    destinationRepository = application.container.destinationRepository
                 )
             }
         }

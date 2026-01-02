@@ -4,10 +4,12 @@ import android.content.Context
 import com.example.sana_visprog.repository.CategoryRepository
 import com.example.sana_visprog.repository.ProvinceRepository
 import com.example.sana_visprog.repository.AuthRepository
+import com.example.sana_visprog.repository.DestinationRepository
 import com.example.sana_visprog.repository.PlanRepository
 import com.example.sana_visprog.service.CategoryService
 import com.example.sana_visprog.service.ProvinceService
 import com.example.sana_visprog.service.AuthService
+import com.example.sana_visprog.service.DestinationService
 import com.example.sana_visprog.service.PlanService
 
 
@@ -36,8 +38,8 @@ class AppContainer(private val context: Context) {
     private val authService: AuthService = retrofit.create(AuthService::class.java)
     val authRepository: AuthRepository = AuthRepository(authService)
 
-    //dummy destination
-//    val destinationRepository: DestinationRepository = DestinationRepository()
+    private val destinationService: DestinationService = retrofit.create(DestinationService::class.java)
+    val destinationRepository: DestinationRepository = DestinationRepository(destinationService)
 
     private val planService: PlanService = retrofit.create(PlanService::class.java)
     val planRepository: PlanRepository = PlanRepository(planService)

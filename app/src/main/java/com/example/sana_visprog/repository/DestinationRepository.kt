@@ -6,7 +6,7 @@ import com.example.sana_visprog.model.Destination
 import com.example.sana_visprog.service.DestinationService
 import okhttp3.MultipartBody
 
-class NetworkDestinationRepository(
+class DestinationRepository(
     private val destinationService: DestinationService
 ) {
 

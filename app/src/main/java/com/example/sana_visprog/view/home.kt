@@ -18,14 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.sana_visprog.model.Category
 import com.example.sana_visprog.model.Destination
 import com.example.sana_visprog.model.Province
 import com.example.sana_visprog.routing.Screen
 import com.example.sana_visprog.view.categories.CategorySection
 import com.example.sana_visprog.view.destination.DestinationCard
-import com.example.sana_visprog.view.destination.dummyDestinations // Import Data Dummy
 import com.example.sana_visprog.view.provinces.ProvinceFilterDropdownView
 import com.example.sana_visprog.viewmodel.HomeViewModel
 
@@ -37,18 +35,19 @@ fun HomeView(
     LaunchedEffect(Unit) {
         viewModel.getCategories()
         viewModel.getProvinces()
+        viewModel.getDestinations()
     }
 
     HomeContent(
         categories = viewModel.categories.value,
         categoriesLoading = viewModel.categoriesLoading.value,
         categoriesError = viewModel.categoriesError.value,
-
         provinces = viewModel.provinces.value,
         provincesLoading = viewModel.provincesLoading.value,
         provincesError = viewModel.provincesError.value,
         isProvinceExpanded = viewModel.isProvinceDropdownExpanded.value,
         selectedProvince = viewModel.selectedProvince.value,
+        destinations = viewModel.destinations.value,
 
         onAddCategory = {
             viewModel.resetCreateState()
@@ -90,6 +89,8 @@ fun HomeContent(
     provincesError: String?,
     isProvinceExpanded: Boolean,
     selectedProvince: String?,
+
+    destinations: List<Destination>,
 
     onAddCategory: () -> Unit,
     onCategoryClick: (Category) -> Unit,
@@ -183,7 +184,16 @@ fun HomeContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val chunkedDestinations = dummyDestinations.chunked(2)
+            val chunkedDestinations = destinations.chunked(2)
+
+            // Optional: Pesan jika data kosong
+            if (destinations.isEmpty()) {
+                Text(
+                    text = "Belum ada destinasi.",
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Gray
+                )
+            }
 
             chunkedDestinations.forEach { rowItems ->
                 Row(
@@ -232,6 +242,12 @@ fun HomeContentPreview() {
         provincesError = null,
         isProvinceExpanded = false,
         selectedProvince = "Jawa Timur",
+
+        destinations = listOf(
+            Destination(1, "Bromo", "Gunung Indah", "Probolinggo", 4.8f, "", "", 1, 1),
+            Destination(2, "Kawah Ijen", "Kawah Ijen Indah", "Banyuwangi", 4.9f, "", "", 1, 1),
+            Destination(3, "Bromo", "Gunung Indah", "Probolinggo", 4.8f, "", "", 1, 1)
+        ),
 
         onAddCategory = {},
         onCategoryClick = {},
