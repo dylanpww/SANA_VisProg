@@ -16,12 +16,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.sana_visprog.viewmodel.AuthUiState
 import com.example.sana_visprog.viewmodel.LoginViewModel
 
 @Composable
 fun UserLoginView(
-    viewModel: LoginViewModel
+    navController: NavController,
+    viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 ) {
     val loginState by viewModel.loginState.collectAsState()
     val context = LocalContext.current
@@ -30,6 +33,9 @@ fun UserLoginView(
         when (val state = loginState) {
             is AuthUiState.Success -> {
                 Toast.makeText(context, "BERHASIL! Halo ${state.username}", Toast.LENGTH_LONG).show()
+                navController.navigate("HOME") {
+                    popUpTo("LOGIN") { inclusive = true }
+                }
                 viewModel.resetState()
             }
             is AuthUiState.Error -> {

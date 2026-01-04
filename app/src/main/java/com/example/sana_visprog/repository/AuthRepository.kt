@@ -16,4 +16,6 @@ class AuthRepository(private val apiService: AuthService) {
         val request = RegisterRequest(username, email, password)
         return apiService.register(request)
     }
+
+    companion object
 }
