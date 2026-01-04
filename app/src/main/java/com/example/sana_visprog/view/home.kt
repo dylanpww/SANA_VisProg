@@ -234,7 +234,7 @@ fun HomeContent(
             shape = CircleShape,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(24.dp)
+                .padding(end = 20.dp, bottom = 90.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
