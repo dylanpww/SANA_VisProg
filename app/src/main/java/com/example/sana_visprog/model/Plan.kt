@@ -18,14 +18,6 @@ data class Plan(
     val name: String,
     val description: String?,
     val createdAt: String,
-//    val destinations: List<DestinationPlanItem>? = null
+    val destinations: List<PlanDestination>
 )
-
-//data class DestinationPlanItem(
-//    val id: Int,
-//    val isVisited: Boolean,
-//    val planId: Int,
-//    val destinationId: Int,
-//    val destination: DestinationModel?
-//)
 
