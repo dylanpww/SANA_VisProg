@@ -4,8 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.sana_visprog.SANAVisProgApplication
 import com.example.sana_visprog.repository.AuthRepository
+import com.example.sana_visprog.repository.UserPreferences
 import com.example.sana_visprog.utils.JwtUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +18,9 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
+
+class LoginViewModel(private val repository: AuthRepository,
+    private val userPreferences: UserPreferences) : ViewModel() {
     var emailInput by mutableStateOf("")
         private set
     var passwordInput by mutableStateOf("")
@@ -41,10 +48,11 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                 val response = repository.loginUser(emailInput, passwordInput)
                 val token = response.data.token
                 val username = JwtUtils.decodeUsername(token)
+                userPreferences.saveToken(token)
                 _loginState.value = AuthUiState.Success(token, username)
 
             } catch (e: HttpException) {
-                _loginState.value = AuthUiState.Error("Gagal Login: Username/Password Salah")
+                _loginState.value = AuthUiState.Error("Gagal Login: Email/Password Salah")
             } catch (e: IOException) {
                 _loginState.value = AuthUiState.Error("Koneksi Error. Cek internet/IP Address.")
             } catch (e: Exception) {
@@ -55,5 +63,16 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
     fun resetState() {
         _loginState.value = AuthUiState.Idle
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as SANAVisProgApplication)
+                val repo = application.container.authRepository
+                LoginViewModel(repository = repo,
+                    userPreferences = application.container.userPreferences)
+            }
+        }
     }
 }
