@@ -2,6 +2,7 @@
 
 package com.example.sana_visprog.repository
 
+import retrofit2.HttpException
 import com.example.sana_visprog.dto.Plan.*
 import com.example.sana_visprog.service.PlanService
 
@@ -15,7 +16,7 @@ class PlanRepository(
         if (response.isSuccessful) {
             return response.body()?.data ?: emptyList()
         } else {
-            throw Exception("Gagal mengambil data plan: ${response.message()}")
+            throw HttpException(response)
         }
     }
 
@@ -24,7 +25,7 @@ class PlanRepository(
         if (response.isSuccessful) {
             return response.body()?.data ?: throw Exception("Data kosong")
         } else {
-            throw Exception("Gagal mengambil detail plan")
+            throw HttpException(response)
         }
     }
 
@@ -35,8 +36,7 @@ class PlanRepository(
         if (response.isSuccessful) {
             return response.body()?.data ?: throw Exception("Respon kosong")
         } else {
-            throw Exception("Gagal membuat plan")
-        }
+            throw HttpException(response)        }
     }
 
     suspend fun updatePlan(token: String, planId: Int, name: String, description: String?): PlanItem {
@@ -46,8 +46,7 @@ class PlanRepository(
         if (response.isSuccessful) {
             return response.body()?.data ?: throw Exception("Respon kosong")
         } else {
-            throw Exception("Gagal update plan")
-        }
+            throw HttpException(response)        }
     }
 
     suspend fun deletePlan(token: String, planId: Int): String {
@@ -55,7 +54,6 @@ class PlanRepository(
         if (response.isSuccessful) {
             return response.body()?.message ?: "Berhasil dihapus"
         } else {
-            throw Exception("Gagal menghapus plan")
-        }
+            throw HttpException(response)        }
     }
 }
