@@ -18,16 +18,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val appContainer = AppContainer(applicationContext)
-        val loginViewModel = LoginViewModel(appContainer.authRepository)
-        val registerViewModel = RegisterViewModel(appContainer.authRepository)
         setContent {
             SANA_VisProgTheme {
                 Navigation()
-//                UserLoginView(viewModel = loginViewModel)
-                //UserSignUpView(viewModel = registerViewModel)
-//                CreatePlanScreen()
-//                PlanScreen()
             }
         }
     }
