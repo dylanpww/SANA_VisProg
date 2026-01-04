@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-//import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,13 +38,21 @@ val poppins = FontFamily(
 
 @Composable
 fun PlanScreen(
-    navController: NavHostController,
+    navController: NavController,
     viewModel: PlanViewModel = viewModel(factory = PlanViewModel.Factory)
 ) {
     LaunchedEffect(Unit) {
         viewModel.getPlans()
     }
     val uiState = viewModel.planUiState
+
+    LaunchedEffect(uiState) {
+        if (uiState is PlanUiState.Unauthorized) {
+            navController.navigate(Screen.LOGIN.name) {
+                popUpTo(0)
+            }
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,6 +84,21 @@ fun PlanScreen(
                     .padding(horizontal = 30.dp)
             ) {
                 when (uiState) {
+
+                    is PlanUiState.Idle-> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                    }
+
+                    is PlanUiState.Unauthorized-> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                    }
+
                     is PlanUiState.Loading -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -124,7 +146,7 @@ fun PlanScreen(
             shape = RoundedCornerShape(50),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 20.dp, bottom = 20.dp)
+                .padding(end = 20.dp, bottom = 90.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -142,7 +164,7 @@ fun PlanList(
 
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(top = 30.dp, bottom = 20.dp),
+        contentPadding = PaddingValues(top = 30.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         items(plans) { plan ->
