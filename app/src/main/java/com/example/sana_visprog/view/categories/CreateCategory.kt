@@ -47,7 +47,7 @@ fun CreateCategoryContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Add New Category",
+                text = "Tambah Kategori",
                 fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF0D2C8A)
@@ -56,7 +56,7 @@ fun CreateCategoryContent(
             Spacer(modifier = Modifier.height(40.dp))
 
             Text(
-                text = "Name",
+                text = "Nama",
                 modifier = Modifier.align(Alignment.Start),
                 fontWeight = FontWeight.SemiBold,
                 color = Color(0xFF0D2C8A)
@@ -67,7 +67,7 @@ fun CreateCategoryContent(
             OutlinedTextField(
                 value = name,
                 onValueChange = onNameChange,
-                placeholder = { Text(text = "Add New Category") },
+                placeholder = { Text(text = "Tambah Kategori") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true
@@ -146,7 +146,7 @@ fun CreateCategoryContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (loading) "Saving..." else "Save",
+                        text = if (loading) "Menyimpan..." else "Simpan",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = Color(0xFF0D2C8A)
