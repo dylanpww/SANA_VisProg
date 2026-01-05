@@ -48,7 +48,7 @@ class LoginViewModel(private val repository: AuthRepository,
                 val response = repository.loginUser(emailInput, passwordInput)
                 val token = response.data.token
                 val username = JwtUtils.decodeUsername(token)
-                userPreferences.saveToken(token)
+                userPreferences.saveSession(token, username)
                 _loginState.value = AuthUiState.Success(token, username)
 
             } catch (e: HttpException) {

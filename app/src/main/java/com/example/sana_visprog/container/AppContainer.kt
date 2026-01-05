@@ -31,6 +31,7 @@ class AppContainer(private val context: Context) {
         .build()
 
     private val categoryService: CategoryService = retrofit.create(CategoryService::class.java)
+    val userPreferences: UserPreferences = UserPreferences(context)
 
     val categoryRepository: CategoryRepository = CategoryRepository(categoryService)
 
@@ -39,7 +40,7 @@ class AppContainer(private val context: Context) {
     val provinceRepository: ProvinceRepository = ProvinceRepository(provinceService)
 
     private val authService: AuthService = retrofit.create(AuthService::class.java)
-    val authRepository: AuthRepository = AuthRepository(authService)
+    val authRepository: AuthRepository = AuthRepository(authService, userPreferences)
 
     private val destinationService: DestinationService = retrofit.create(DestinationService::class.java)
     val destinationRepository: DestinationRepository = DestinationRepository(destinationService)
@@ -51,5 +52,4 @@ class AppContainer(private val context: Context) {
 
      val destinationPlanRepository: DestinationPlanRepository = DestinationPlanRepository(destinationPlanService)
 
-    val userPreferences: UserPreferences = UserPreferences(context)
 }
