@@ -1,6 +1,7 @@
 package com.example.sana_visprog.repository
 
 import com.example.sana_visprog.dto.Destination.CreateDestinationRequest
+import com.example.sana_visprog.dto.Destination.FilterDestinationRequest
 import com.example.sana_visprog.dto.Destination.toDestination
 import com.example.sana_visprog.model.Destination
 import com.example.sana_visprog.service.DestinationService
@@ -13,6 +14,21 @@ class DestinationRepository(
     suspend fun getDestinations(): List<Destination> {
         return try {
             val response = destinationService.getAllDestinations()
+            if (response.isSuccessful) {
+                response.body()?.data?.map { it.toDestination() } ?: emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    suspend fun filterDestinations(categoryId: Int?, provinceId: Int?): List<Destination> {
+        return try {
+            val request = FilterDestinationRequest(categoryId, provinceId)
+            val response = destinationService.filterDestinations(request)
             if (response.isSuccessful) {
                 response.body()?.data?.map { it.toDestination() } ?: emptyList()
             } else {
