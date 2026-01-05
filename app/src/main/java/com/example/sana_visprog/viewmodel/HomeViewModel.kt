@@ -43,13 +43,15 @@ class HomeViewModel(
     val provincesError = mutableStateOf<String?>(null)
 
     val isProvinceDropdownExpanded = mutableStateOf(false)
-    val selectedProvince = mutableStateOf<String?>(null)
+    val selectedProvince = mutableStateOf<String?>("Semua")
 
     // --- DESTINATION STATE (BARU) ---
     val destinations = mutableStateOf<List<Destination>>(emptyList())
     val destinationsLoading = mutableStateOf(false)
     val destinationsError = mutableStateOf<String?>(null)
 
+    val categoryDestinations = mutableStateOf<List<Destination>>(emptyList())
+    val categoryDestinationsLoading = mutableStateOf(false)
 
     // --- CATEGORY FUNCTIONS ---
     fun getCategories() {
@@ -165,6 +167,46 @@ class HomeViewModel(
                 destinationsError.value = e.message
             } finally {
                 destinationsLoading.value = false
+            }
+        }
+    }
+
+    fun filterDestinationsByProvince(provinceName: String) {
+        selectedProvince.value = provinceName
+        destinationsLoading.value = true
+
+        viewModelScope.launch {
+            try {
+                if (provinceName == "Semua") {
+                    destinations.value = destinationRepository.getDestinations()
+                } else {
+                    val provinceId = provinces.value.find { it.name == provinceName }?.id
+
+                    if (provinceId != null) {
+                        destinations.value = destinationRepository.filterDestinations(null, provinceId)
+                    } else {
+                        destinations.value = destinationRepository.getDestinations()
+                    }
+                }
+            } catch (e: Exception) {
+                destinationsError.value = e.message
+            } finally {
+                destinationsLoading.value = false
+            }
+        }
+    }
+
+    fun getDestinationsByCategory(categoryId: Int) {
+        categoryDestinationsLoading.value = true
+        categoryDestinations.value = emptyList()
+
+        viewModelScope.launch {
+            try {
+                categoryDestinations.value = destinationRepository.filterDestinations(categoryId, null)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                categoryDestinationsLoading.value = false
             }
         }
     }
