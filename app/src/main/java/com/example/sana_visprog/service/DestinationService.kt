@@ -2,6 +2,7 @@ package com.example.sana_visprog.service
 
 import com.example.sana_visprog.dto.Destination.CreateDestinationRequest
 import com.example.sana_visprog.dto.Destination.DestinationResponse
+import com.example.sana_visprog.dto.Destination.FilterDestinationRequest
 import com.example.sana_visprog.model.UploadResponse
 import com.example.sana_visprog.model.WebResponse
 import okhttp3.MultipartBody
@@ -17,6 +18,9 @@ interface DestinationService {
 
     @GET("destinations")
     suspend fun getAllDestinations(): Response<WebResponse<List<DestinationResponse>>>
+
+    @POST("destinations/filter")
+    suspend fun filterDestinations(@Body request: FilterDestinationRequest): Response<WebResponse<List<DestinationResponse>>>
 
     @GET("destinations/{id}")
     suspend fun getDestination(@Path("id") id: Int): Response<WebResponse<DestinationResponse>>
