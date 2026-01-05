@@ -13,13 +13,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.sana_visprog.model.Province
 
@@ -31,6 +32,9 @@ fun ProvinceFilterDropdownContent(
     onToggle: () -> Unit,
     onSelect: (String) -> Unit
 ) {
+    val primaryDeepBlue = Color(0xFF0F115F)
+    val lightBackground = Color(0xFFF5F7FA)
+
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -40,7 +44,7 @@ fun ProvinceFilterDropdownContent(
                 Icon(
                     imageVector = Icons.Default.FilterAlt,
                     contentDescription = "Filter",
-                    tint = Color(0xFF162D82)
+                    tint = if (selectedProvince == "Semua" || selectedProvince == null) Color.Gray else primaryDeepBlue
                 )
             }
         }
@@ -49,26 +53,45 @@ fun ProvinceFilterDropdownContent(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(horizontal = 15.dp)
+                    .height(250.dp)
+                    .padding(horizontal = 16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 LazyColumn(
-                    modifier = Modifier.background(Color(0xFFEBF0FF))
+                    modifier = Modifier.background(Color.White)
                 ) {
-                    items(provinces) { province ->
+                    item {
+                        val isSelected = selectedProvince == "Semua" || selectedProvince == null
+
                         Text(
-                            text = province.name,
+                            text = "Semua",
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(
-                                    if (selectedProvince == province.name)
-                                        Color(0xFFB0CEFF)
-                                    else
-                                        Color(0xFFEBF0FF)
+                                    if (isSelected) primaryDeepBlue else Color.White
+                                )
+                                .clickable { onSelect("Semua") }
+                                .padding(vertical = 16.dp, horizontal = 20.dp),
+                            color = if (isSelected) Color.White else primaryDeepBlue
+                        )
+                    }
+
+                    items(provinces) { province ->
+                        val isSelected = selectedProvince == province.name
+
+                        Text(
+                            text = province.name,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    if (isSelected) primaryDeepBlue else Color.White
                                 )
                                 .clickable { onSelect(province.name) }
-                                .padding(15.dp),
-                            color = Color.Black
+                                .padding(vertical = 16.dp, horizontal = 20.dp),
+                            color = if (isSelected) Color.White else primaryDeepBlue
                         )
                     }
                 }
@@ -83,37 +106,13 @@ fun ProvinceFilterDropdownView(
     isExpanded: Boolean,
     selectedProvince: String?,
     onToggle: () -> Unit,
-    onSelect: (Province) -> Unit
+    onSelect: (String) -> Unit
 ) {
     ProvinceFilterDropdownContent(
         provinces = provinces,
         isExpanded = isExpanded,
         selectedProvince = selectedProvince,
         onToggle = onToggle,
-        onSelect = { name ->
-            provinces.firstOrNull { it.name == name }?.let {
-                onSelect(it)
-            }
-        }
-    )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewProvinceFilterDropdown() {
-    val provinces = listOf(
-        Province(1, "Jawa Timur"),
-        Province(2, "Jawa Tengah"),
-        Province(3, "Jawa Barat"),
-        Province(4, "Jawa Utara"),
-        Province(5, "Jawa Selatan")
-    )
-
-    ProvinceFilterDropdownContent(
-        provinces = provinces,
-        isExpanded = true,
-        selectedProvince = "Jawa Timur",
-        onToggle = {},
-        onSelect = {}
+        onSelect = onSelect
     )
 }
