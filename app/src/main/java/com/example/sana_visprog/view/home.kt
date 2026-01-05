@@ -40,7 +40,9 @@ fun HomeView(
     LaunchedEffect(Unit) {
         viewModel.getCategories()
         viewModel.getProvinces()
-        viewModel.getDestinations()
+        if (viewModel.destinations.value.isEmpty()) {
+            viewModel.getDestinations()
+        }
     }
 
     HomeContent(
@@ -52,7 +54,10 @@ fun HomeView(
         provincesError = viewModel.provincesError.value,
         isProvinceExpanded = viewModel.isProvinceDropdownExpanded.value,
         selectedProvince = viewModel.selectedProvince.value,
+
         destinations = viewModel.destinations.value,
+        destinationsLoading = viewModel.destinationsLoading.value,
+        destinationsError = viewModel.destinationsError.value,
 
         onAddCategory = {
             viewModel.resetCreateState()
@@ -65,6 +70,7 @@ fun HomeView(
         onCategoryClick = { category ->
             viewModel.resetUpdateState()
             viewModel.resetDeleteState()
+            viewModel.categoryDestinations.value = emptyList()
             navController.navigate(
                 "${Screen.CATEGORY_DETAIL.name}/${category.id}"
             )
@@ -75,9 +81,9 @@ fun HomeView(
                 !viewModel.isProvinceDropdownExpanded.value
         },
 
-        onSelectProvince = { province ->
-            viewModel.selectedProvince.value = province
+        onSelectProvince = { provinceName ->
             viewModel.isProvinceDropdownExpanded.value = false
+            viewModel.filterDestinationsByProvince(provinceName)
         },
 
         onDestinationClick = { destination ->
@@ -99,6 +105,8 @@ fun HomeContent(
     selectedProvince: String?,
 
     destinations: List<Destination>,
+    destinationsLoading: Boolean,
+    destinationsError: String?,
 
     onAddCategory: () -> Unit,
     onAddDestination: () -> Unit,
@@ -113,7 +121,7 @@ fun HomeContent(
 
     Box(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -131,7 +139,6 @@ fun HomeContent(
                 .verticalScroll(scrollState)
                 .padding(bottom = 80.dp)
         ) {
-
             if (categoriesLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -140,7 +147,7 @@ fun HomeContent(
 
             categoriesError?.let {
                 Text(
-                    text = "Categories Error: $it",
+                    text = "Kategori Error: $it",
                     color = Color.Red,
                     modifier = Modifier.padding(16.dp)
                 )
@@ -164,7 +171,7 @@ fun HomeContent(
 
             provincesError?.let {
                 Text(
-                    text = "Provinces Error: $it",
+                    text = "Provinsi Error: $it",
                     color = Color.Red,
                     modifier = Modifier.padding(16.dp)
                 )
@@ -176,15 +183,20 @@ fun HomeContent(
                     isExpanded = isProvinceExpanded,
                     selectedProvince = selectedProvince,
                     onToggle = onToggleProvince,
-                    onSelect = { province ->
-                        onSelectProvince(province.name)
-                    }
+                    onSelect = onSelectProvince
                 )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
+
+            val titleText = if (selectedProvince == "Semua" || selectedProvince == null) {
+                "Destinasi Wisata Terpopuler"
+            } else {
+                "Destinasi Wisata $selectedProvince"
+            }
+
             Text(
-                text = "Popular Destinations",
+                text = titleText,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
@@ -193,9 +205,15 @@ fun HomeContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val chunkedDestinations = destinations.chunked(2)
+            destinationsError?.let {
+                Text(
+                    text = "Error loading destinasi: $it",
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
 
-            if (destinations.isEmpty()) {
+            if (!destinationsLoading && destinations.isEmpty() && destinationsError == null) {
                 Text(
                     text = "Belum ada destinasi.",
                     modifier = Modifier.padding(16.dp),
@@ -203,27 +221,36 @@ fun HomeContent(
                 )
             }
 
-            chunkedDestinations.forEach { rowItems ->
-                Row(
+            if (destinationsLoading) {
+                CircularProgressIndicator(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    rowItems.forEach { destination ->
-                        Box(modifier = Modifier.weight(1f)) {
-                            DestinationCard(
-                                destination = destination,
-                                onClick = { onDestinationClick(destination) }
-                            )
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 20.dp)
+                )
+            } else {
+                val chunkedDestinations = destinations.chunked(2)
+                chunkedDestinations.forEach { rowItems ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        rowItems.forEach { destination ->
+                            Box(modifier = Modifier.weight(1f)) {
+                                DestinationCard(
+                                    destination = destination,
+                                    onClick = { onDestinationClick(destination) }
+                                )
+                            }
+                        }
+
+                        if (rowItems.size < 2) {
+                            Spacer(modifier = Modifier.weight(1f))
                         }
                     }
-
-                    if (rowItems.size < 2) {
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
@@ -238,7 +265,7 @@ fun HomeContent(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add Destination"
+                contentDescription = "Tambah Destinasi"
             )
         }
     }
@@ -250,27 +277,28 @@ fun HomeContentPreview() {
     HomeContent(
         categories = listOf(
             Category(1, "Outdoor", "Park"),
-            Category(2, "Indoor", "Museum"),
-            Category(3, "Gaming", "Gaming")
+            Category(2, "Indoor", "Museum")
         ),
         categoriesLoading = false,
         categoriesError = null,
 
         provinces = listOf(
             Province(1, "Jawa Timur"),
-            Province(2, "Jawa Tengah"),
-            Province(3, "Jawa Barat")
+            Province(2, "Jawa Tengah")
         ),
         provincesLoading = false,
         provincesError = null,
         isProvinceExpanded = false,
-        selectedProvince = "Jawa Timur",
+        selectedProvince = "Semua",
 
         destinations = listOf(
             Destination(1, "Bromo", "Gunung Indah", "Probolinggo", 4.8f, "", "", 1, 1),
-            Destination(2, "Kawah Ijen", "Kawah Ijen Indah", "Banyuwangi", 4.9f, "", "", 1, 1),
-            Destination(3, "Bromo", "Gunung Indah", "Probolinggo", 4.8f, "", "", 1, 1)
+            Destination(2, "Kawah Ijen", "Kawah Ijen Indah", "Banyuwangi", 4.9f, "", "", 1, 1)
         ),
+        // --- TAMBAHAN DI PREVIEW ---
+        destinationsLoading = false,
+        destinationsError = null,
+        // ---------------------------
 
         onAddCategory = {},
         onAddDestination = {},
