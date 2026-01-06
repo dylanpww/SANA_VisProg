@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,13 +20,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.sana_visprog.repository.UserPreferences
 import com.example.sana_visprog.routing.Screen
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @Composable
-fun NavBar(navController: NavController) {
+fun NavBar(navController: NavController,
+           userPreferences : UserPreferences) {
 
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination?.route
+
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -71,7 +78,18 @@ fun NavBar(navController: NavController) {
                     icon = Icons.Outlined.Person,
                     isActive = profileActive,
                     onClick = {
-                        if (!profileActive) navController.navigate(Screen.PROFILE.name)
+                        if (!profileActive) {
+                            scope.launch {
+                                val token = userPreferences.authToken.first()
+                                if (token.isNullOrBlank()) {
+                                    navController.navigate(Screen.LOGIN.name) {
+                                        popUpTo(0)
+                                    }
+                                } else {
+                                    navController.navigate(Screen.PROFILE.name)
+                                }
+                            }
+                        }
                     }
                 )
             }
@@ -100,8 +118,8 @@ fun NavItem(
     }
 }
 
-@Composable
-@Preview(showSystemUi = true, showBackground = true)
-fun NavBarPreview() {
-    NavBar(navController = rememberNavController())
-}
+//@Composable
+//@Preview(showSystemUi = true, showBackground = true)
+//fun NavBarPreview() {
+//    NavBar(navController = rememberNavController())
+//}

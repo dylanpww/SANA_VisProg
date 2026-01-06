@@ -2,17 +2,23 @@ package com.example.sana_visprog.routing
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.sana_visprog.SANAVisProgApplication
+import com.example.sana_visprog.repository.UserPreferences
 import com.example.sana_visprog.view.HomeView
 import com.example.sana_visprog.view.NavBar
+import com.example.sana_visprog.view.ProfileView
 import com.example.sana_visprog.view.StartingPage
 import com.example.sana_visprog.view.destination.DestinationDetailView
 import com.example.sana_visprog.view.categories.CategoryDetailView
@@ -23,6 +29,7 @@ import com.example.sana_visprog.view.plan.PlanScreen
 import com.example.sana_visprog.view.plan.SelectDestinationScreen
 import com.example.sana_visprog.view.plan.UpdatePlanScreen
 import com.example.sana_visprog.view.user.UserLoginView
+import com.example.sana_visprog.view.user.UserSignUpView
 import com.example.sana_visprog.viewmodel.LoginViewModel
 
 enum class Screen {
@@ -46,6 +53,8 @@ enum class Screen {
 fun Navigation() {
     val navController = rememberNavController()
 
+    val context = LocalContext.current
+    val userPreferences = (context.applicationContext as SANAVisProgApplication).container.userPreferences
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -54,7 +63,6 @@ fun Navigation() {
         Screen.PLAN.name,
         Screen.PROFILE.name,
         Screen.PLAN.name,
-        Screen.DESTINATION_DETAIL.name
     )
     Box(
         modifier = Modifier
@@ -75,8 +83,15 @@ fun Navigation() {
             }
 
             composable(Screen.REGISTER.name) {
-
+                UserSignUpView(
+                    navController = navController
+                )
             }
+
+            composable(Screen.PROFILE.name) {
+                ProfileView(navController = navController)
+            }
+
 
             composable(Screen.HOME.name) {
                 HomeView(navController = navController)
@@ -152,8 +167,17 @@ fun Navigation() {
                 CreateDestinationView(navController = navController)
             }
         }
-        if (showBottomBar){
-            NavBar(navController = navController)
+        if (showBottomBar) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+            ) {
+                NavBar(
+                    navController = navController,
+                    userPreferences = userPreferences
+                )
+            }
         }
     }
 }
