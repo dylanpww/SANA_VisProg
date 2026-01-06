@@ -2,6 +2,7 @@ package com.example.sana_visprog.view.user
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.sana_visprog.routing.Screen
 import com.example.sana_visprog.viewmodel.AuthUiState
 import com.example.sana_visprog.viewmodel.LoginViewModel
 
@@ -90,7 +92,17 @@ fun UserLoginView(
 
                 Spacer(modifier = Modifier.height(20.dp))
                 Text("Don't have an account?")
-                Text("Sign Up", color = Color(0xFF0F115F), fontWeight = FontWeight.Bold)
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                navController.navigate(Screen.REGISTER.name)
+                            }
+                        )
+                ){
+                    Text("Sign Up", color = Color(0xFF0F115F), fontWeight = FontWeight.Bold)
+
+                }
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(

@@ -2,10 +2,12 @@ package com.example.sana_visprog.view.user
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import com.example.sana_visprog.routing.Screen
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,12 +28,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.example.sana_visprog.viewmodel.AuthUiState
 import com.example.sana_visprog.viewmodel.RegisterViewModel
 
 @Composable
 fun UserSignUpView(
-    viewModel: RegisterViewModel
+    navController: NavController,
+    viewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)
 ){
     val registerState by viewModel.registerState.collectAsState()
     val context = LocalContext.current
@@ -41,6 +47,7 @@ fun UserSignUpView(
             is AuthUiState.Success -> {
                 Toast.makeText(context, "BERHASIL! membuat akun", Toast.LENGTH_LONG).show()
                 viewModel.resetState()
+                navController.navigate(Screen.LOGIN.name)
             }
             is AuthUiState.Error -> {
                 Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
@@ -96,7 +103,16 @@ fun UserSignUpView(
                 )
                 Spacer(modifier = Modifier.height(20.dp))
                 Text("Already have an account?")
-                Text("Log In", color = Color(0xFF0F115F), fontWeight = FontWeight.Bold)
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                navController.navigate(Screen.LOGIN.name)
+                            }
+                        )
+                ){
+                    Text("Log In", color = Color(0xFF0F115F), fontWeight = FontWeight.Bold)
+                }
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {

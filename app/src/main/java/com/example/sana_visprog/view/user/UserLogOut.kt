@@ -130,7 +130,7 @@ fun ProfileContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
-                    .padding(bottom = 40.dp)
+                    .padding(bottom = 140.dp)
                     .height(50.dp)
             ) {
                 Text(
