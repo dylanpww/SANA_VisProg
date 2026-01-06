@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sana_visprog.model.Category
 import com.example.sana_visprog.utils.IconList
+import com.example.sana_visprog.view.plan.poppins
 
 @Composable
 fun CategorySection(
@@ -80,7 +81,8 @@ fun CategorySection(
                         text = category.name,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF131677),
-                        fontSize = 18.sp,
+                        fontFamily = poppins,
+                        fontSize = 13.sp,
                         maxLines = 1
                     )
                 }
@@ -113,7 +115,8 @@ fun CategorySection(
                         text = "Add",
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF131677),
-                        fontSize = 18.sp
+                        fontFamily = poppins,
+                        fontSize = 13.sp
                     )
                 }
             }

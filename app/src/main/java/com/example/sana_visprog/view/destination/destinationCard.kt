@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.sana_visprog.model.Destination
 import androidx.compose.ui.platform.LocalInspectionMode
+import com.example.sana_visprog.view.plan.poppins
 
 @Composable
 fun DestinationCard(
@@ -73,6 +74,7 @@ fun DestinationCard(
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
+                fontFamily = poppins,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -83,6 +85,7 @@ fun DestinationCard(
                 text = destination.description,
                 color = Color.White.copy(alpha = 0.8f),
                 fontSize = 12.sp,
+                fontFamily = poppins,
                 lineHeight = 14.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis

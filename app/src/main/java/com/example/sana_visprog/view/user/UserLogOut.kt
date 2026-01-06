@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sana_visprog.routing.Screen
+import com.example.sana_visprog.view.plan.poppins
 import com.example.sana_visprog.viewmodel.ProfileViewModel
 
 val DarkBlue = Color(0xFF0F115F)
@@ -79,6 +80,7 @@ fun ProfileContent(
                 Text(
                     text = initial,
                     fontSize = 48.sp,
+                    fontFamily = poppins,
                     fontWeight = FontWeight.Bold,
                     color = DarkBlue
                 )
@@ -89,6 +91,7 @@ fun ProfileContent(
             Text(
                 text = "Hai, $userName!",
                 fontSize = 24.sp,
+                fontFamily = poppins,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
@@ -98,6 +101,7 @@ fun ProfileContent(
             Text(
                 text = "Welcome back to SANA",
                 fontSize = 14.sp,
+                fontFamily = poppins,
                 color = Color.Gray
             )
 
@@ -111,11 +115,11 @@ fun ProfileContent(
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Account Settings", fontWeight = FontWeight.Bold, color = DarkBlue)
+                    Text("Account Settings", fontWeight = FontWeight.Bold,fontFamily = poppins, color = DarkBlue)
                     Spacer(modifier = Modifier.height(12.dp))
-                    Text("Edit Profile", color = Color.Gray, modifier = Modifier.padding(vertical = 8.dp))
+                    Text("Edit Profile", color = Color.Gray, fontFamily = poppins,modifier = Modifier.padding(vertical = 8.dp))
                     Divider(color = Color(0xFFEEEEEE))
-                    Text("Change Password", color = Color.Gray, modifier = Modifier.padding(vertical = 8.dp))
+                    Text("Change Password", color = Color.Gray,fontFamily = poppins, modifier = Modifier.padding(vertical = 8.dp))
                 }
             }
 
@@ -136,6 +140,7 @@ fun ProfileContent(
                 Text(
                     text = "Log Out",
                     fontSize = 16.sp,
+                    fontFamily = poppins,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )

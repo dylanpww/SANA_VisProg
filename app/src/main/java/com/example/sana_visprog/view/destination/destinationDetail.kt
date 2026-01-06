@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.sana_visprog.view.plan.poppins
 import com.example.sana_visprog.viewmodel.DestinationDetailViewModel
 
 @Composable
@@ -90,6 +91,7 @@ fun DestinationDetailView(
                             text = destination.name,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
+                            fontFamily = poppins,
                             color = Color.White
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -103,6 +105,7 @@ fun DestinationDetailView(
                             Text(
                                 text = destination.location,
                                 fontSize = 12.sp,
+                                fontFamily = poppins,
                                 color = Color.White
                             )
                         }
@@ -168,6 +171,7 @@ fun DestinationDetailView(
                     Text(
                         text = "${destination.rating}",
                         color = Color.White,
+                        fontFamily = poppins,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
                     )
@@ -179,6 +183,7 @@ fun DestinationDetailView(
                     text = "Description",
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
+                    fontFamily = poppins,
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -186,6 +191,7 @@ fun DestinationDetailView(
                     text = destination.description,
                     color = Color.White.copy(alpha = 0.9f),
                     fontSize = 14.sp,
+                    fontFamily = poppins,
                     lineHeight = 20.sp,
                     textAlign = TextAlign.Justify
                 )
@@ -216,6 +222,7 @@ fun DestinationDetailView(
                 ) {
                     Text(
                         text = "See Events",
+                        fontFamily = poppins,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
@@ -223,7 +230,7 @@ fun DestinationDetailView(
             }
         } else {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Data tidak ditemukan", color = Color.White)
+                Text("Data tidak ditemukan", color = Color.White,fontFamily = poppins)
             }
         }
     }

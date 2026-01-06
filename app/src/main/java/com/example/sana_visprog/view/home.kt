@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,7 @@ import com.example.sana_visprog.model.Province
 import com.example.sana_visprog.routing.Screen
 import com.example.sana_visprog.view.categories.CategorySection
 import com.example.sana_visprog.view.destination.DestinationCard
+import com.example.sana_visprog.view.plan.poppins
 import com.example.sana_visprog.view.provinces.ProvinceFilterDropdownView
 import com.example.sana_visprog.viewmodel.HomeViewModel
 
@@ -122,23 +124,32 @@ fun HomeContent(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .background(
-                    color = Color(0xFF0F115F),
-                    shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
-                )
-        )
+
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 50.dp)
                 .verticalScroll(scrollState)
                 .padding(bottom = 80.dp)
         ) {
+            Box(
+                modifier = Modifier
+                    .padding(bottom = 50.dp)
+                    .height(130.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                    .background(Color(0xFF0F115E)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Kita Pergi ke SANA",
+                    fontFamily = poppins,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    modifier = Modifier.padding(top = 20.dp)
+                )
+            }
             if (categoriesLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
